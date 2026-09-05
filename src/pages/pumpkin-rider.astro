@@ -1,0 +1,48 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Pumpkin Rider — Halloween Motorbike Game | LennySimpson" description="A pumpkin. A motorbike. One haunted hollow. Jump ramps, ride loops and dodge Halloween obstacles in this side-scrolling game.">
+  <header class="rider-heading"><div><p class="chapter">Endless ride · Haunted Hollow</p><h1>🎃 Pumpkin Rider</h1></div><p class="muted">A little pumpkin.<br />A wicked ride.</p></header>
+  <section class="rider-shell" aria-label="Pumpkin Rider game">
+    <div class="rider-hud"><span>Score <b id="rider-score">0</b></span><span id="rider-distance">0 m</span><span id="rider-difficulty">Stage 1</span><span>Best <b id="rider-best">0</b></span><span id="rider-boost">⚡ Find a ? box</span><button id="rider-pause" type="button">Pause</button><button id="rider-restart" type="button">Restart</button></div>
+    <div class="rider-stage">
+      <canvas id="rider-canvas" width="1000" height="560" tabindex="0" aria-label="Halloween motorbike course. Space to jump, left and right to tilt, down to brake, P to pause.">Your browser needs Canvas support to play Pumpkin Rider.</canvas>
+      <div class="rider-overlay" id="rider-overlay"><div><p class="chapter">The midnight run</p><h2 id="rider-title">Let’s raise some dust.</h2><p id="rider-message">Ride an endless haunted road. Jump obstacles, collect candy, and conquer loops. The farther you go, the faster and busier it gets.</p><button class="btn" id="rider-start" type="button">Start riding →</button></div></div>
+      <p id="rider-notice" role="status" aria-live="polite"></p>
+    </div>
+    <div class="rider-controls" aria-label="Game controls"><button data-rider="left" aria-label="Tilt backwards">↶ Tilt</button><button data-rider="right" aria-label="Tilt forwards">Tilt ↷</button><button data-rider="brake">Brake</button><button data-rider="jump" class="jump">Jump ↑</button></div>
+  </section>
+  <div class="rider-help"><p><strong>Space / ↑</strong> jump · <strong>← → / A D</strong> tilt in the air · <strong>↓ / S</strong> brake · <strong>P</strong> pause</p><p class="muted">Land with your wheels down. Keep your speed for loops. A crash ends your run. Ride farther and collect candy to beat your best score. Landing zones stay clear as difficulty rises. Touch buttons work too. Ride into golden ? boxes for a 20-second speed boost. Another box refreshes the timer; pausing freezes it.</p></div>
+  <script>
+    import { mountPumpkinRider } from '../game/pumpkin-rider';
+    mountPumpkinRider();
+  </script>
+  <style>
+    .rider-heading { display:flex; justify-content:space-between; align-items:center; gap:1rem; margin:2rem 0 1rem; }
+    .rider-heading h1 { margin:0; font-size:clamp(1.7rem,5vw,2.8rem); line-height:1.2; }
+    .chapter { color:#ffc479; margin:0 0 .5rem; font-weight:700; }
+    .rider-shell { border:1px solid #4b3c61; border-radius:16px; overflow:hidden; background:#191327; }
+    .rider-hud { display:flex; align-items:center; gap:1rem; padding:.8rem 1rem; flex-wrap:wrap; font-size:.9rem; }
+    #rider-boost { color:#ffc66d; font-weight:700; }
+    .rider-hud span:nth-child(2) { margin-right:auto; }
+    .rider-hud button,.rider-controls button { background:#332744; border:0; color:#fff0df; padding:.6rem .85rem; border-radius:8px; font:inherit; font-weight:700; cursor:pointer; }
+    button:focus-visible,canvas:focus-visible { outline:3px solid #ffbc64; outline-offset:-3px; }
+    button:hover { filter:brightness(1.15); }
+    .rider-stage { position:relative; }
+    canvas { display:block; width:100%; aspect-ratio:1000 / 560; touch-action:none; }
+    .rider-overlay { position:absolute; inset:0; display:grid; place-items:center; padding:1rem; background:#120e24c9; text-align:center; }
+    .rider-overlay[hidden] { display:none; }
+    .rider-overlay>div { max-width:29rem; }
+    .rider-overlay h2 { font-size:clamp(1.3rem,4vw,2.4rem); line-height:1.1; margin:.4rem 0; text-wrap:balance; }
+    .rider-overlay p { line-height:1.5; }
+    .rider-overlay .btn { background:#ffb258; }
+    #rider-notice { position:absolute; bottom:.5rem; left:0; right:0; text-align:center; color:#fff1bf; font-weight:800; pointer-events:none; margin:0; text-shadow:0 2px 3px #120e24; }
+    .rider-controls { display:flex; gap:.6rem; padding:.8rem; }
+    .rider-controls button { flex:1; touch-action:none; user-select:none; }
+    .rider-controls .jump { background:#ffb258; color:#271627; }
+    .rider-help { font-size:.9rem; margin:1rem 0; }
+    .rider-help p { margin:.5rem 0; }
+    @media(max-width:550px) { .rider-heading>p { display:none; } .rider-overlay .chapter { display:none; } .rider-overlay p { font-size:.8rem; margin:.5rem 0; } .rider-overlay .btn { padding:.6rem 1rem; } .rider-hud { gap:.65rem; padding:.6rem; } }
+  </style>
+</BaseLayout>
+

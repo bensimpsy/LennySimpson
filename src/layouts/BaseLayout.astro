@@ -22,6 +22,7 @@ const current = Astro.url.pathname;
       <div class="nav-inner">
         <a class="brand" href="/">🚀 Lenny<span>Simpson</span></a>
         <nav class="links">
+          <a href="/pumpkin-rider" aria-current={current === '/pumpkin-rider' ? 'page' : undefined}>🎃 Rider</a>
           <a href="/cross-the-swamp" aria-current={current === '/cross-the-swamp' ? 'page' : undefined}>🐸 Swamp</a>
           <a href="/game" aria-current={current === '/game' ? 'page' : undefined}>⭐ Stars</a>
           <a href="/blog" aria-current={current.startsWith('/blog') ? 'page' : undefined}>📝 Blog</a>

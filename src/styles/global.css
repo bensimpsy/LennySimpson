@@ -34,6 +34,10 @@ header.nav {
 .links { display: flex; gap: 1rem; }
 .links a { text-decoration: none; color: var(--muted); font-weight: 600; }
 .links a[aria-current="page"], .links a:hover { color: var(--text); }
+@media (max-width: 650px) {
+  .nav-inner { flex-direction: column; gap: .5rem; }
+  .links { flex-wrap: wrap; justify-content: center; gap: .4rem .85rem; font-size: .9rem; }
+}
 .hero { padding: 4rem 0 2rem; text-align: center; }
 .hero h1 { font-size: clamp(2.2rem, 6vw, 3.8rem); line-height: 1.05; margin: 0 0 0.75rem; }
 .hero p { color: var(--muted); font-size: 1.1rem; max-width: 36rem; margin: 0 auto 1.5rem; }

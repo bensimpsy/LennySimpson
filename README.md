@@ -16,6 +16,8 @@ npm run dev
 Then visit http://localhost:4321. Play at http://localhost:4321/game.
 
 ## Scripts
+- Pumpkin Rider: `/pumpkin-rider` — Endless Halloween 2D motorbike course with streamed ramps, loops, randomized obstacles, candy and 20-second boosts. Speed and obstacle frequency rise gradually with distance; protected landing zones account for maximum boosted speed. Crashes end the run. Score combines distance, candy and loop bonuses; endless best scores use separate browser storage. Controls: Space/Up to jump, Left/Right to tilt, Down to brake, P to pause; touch controls are included. Best score stays in local browser storage.
+- `node tests/pumpkin-rider.test.mjs` — Physics regression checks (Node 22.18+): 20 long rides across 20 sections, progressive difficulty, bounded memory, boost lifecycle, collisions and 240 landing scenarios across difficulty levels.
 - `npm run dev` – Start local dev server
 - `npm run build` – Production build to `dist/`
 - `npm run preview` – Preview the built site locally
