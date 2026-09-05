@@ -1,0 +1,9 @@
+{
+  "$schema": "https://developers.cloudflare.com/workers/wrangler/configuration-schema.json",
+  "name": "lenny-simpson",
+  "compatibility_date": "2025-11-01",
+  // Cloudflare Pages (static): build with `npm run build`, output `dist/`.
+  // Deploy via: npx wrangler pages deploy ./dist --project-name=lenny-simpson
+  // Or connect the repo in the Pages dashboard with build command `npm run build`.
+  "pages_build_output_dir": "dist"
+}

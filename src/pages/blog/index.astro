@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog')).sort((a, b) => +b.data.date - +a.data.date);
+---
+<BaseLayout title="Blog — LennySimpson" description="Lenny's build log: games, Three.js, and experiments.">
+  <h1>📝 Build log</h1>
+  <p class="muted">Short updates as we build the game.</p>
+  <div class="grid">
+    {posts.map((p) => (
+      <div class="card">
+        <h3><a href={`/blog/${p.slug}`}>{p.data.title}</a></h3>
+        <p class="muted">{p.data.date.toDateString()} · {p.data.tags.join(', ')}</p>
+        <p>{p.data.description}</p>
+      </div>
+    ))}
+  </div>
+</BaseLayout>

@@ -1,0 +1,86 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Star Collector — Play | LennySimpson" description="Endless drift survival: steer the ever-gliding rocket, grab stars, dodge asteroids. A Three.js game by Lenny.">
+  <h1>⭐ Star Collector</h1>
+  <p class="muted">Your rocket waits on the pad until you press a direction — then it <strong>never stops gliding</strong>. Steer with <code>WASD</code> / <code>arrow keys</code> (hold two for diagonals), or hold the buttons on mobile. Grab stars (+10, big ones +30) and ⚡ supply crates for a <strong>20-second speed boost</strong>, bounce off the rim. <strong>One asteroid hit ends the run</strong> — every 15 seconds it gets faster with another rock. How long can you survive?</p>
+
+  <div class="game-shell">
+    <div class="hud">
+      <span class="pill">Score: <span id="hud-score">0</span></span>
+      <span class="pill">Level: <span id="hud-level">1</span></span>
+      <span class="pill" id="hud-boost" hidden>⚡ <span id="hud-boost-time">20</span>s</span>
+      <span class="pill">Best: <span id="hud-best">0</span></span>
+      <button class="btn" id="btn-restart" type="button">↻ Restart</button>
+      <button class="btn secondary" id="btn-mute" type="button" title="Toggle sound">🔊</button>
+    </div>
+
+    <div id="game-canvas-wrap">
+      <div class="overlay" id="game-overlay">
+        <div>
+          <h2 id="overlay-title" style="margin:0 0 .5rem">Ready?</h2>
+          <p class="muted" id="overlay-sub" style="margin:0 0 1rem">Press Start, then steer with an arrow key to launch!</p>
+          <button class="btn" id="btn-start" type="button">▶ Start</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="touch-controls" aria-hidden="true">
+      <button data-move="up" type="button">▲</button>
+      <button data-move="left" type="button">◀</button>
+      <button data-move="down" type="button">▼</button>
+      <button data-move="right" type="button">▶</button>
+    </div>
+  </div>
+
+  <section class="card">
+    <h3>How we’ll keep building it 👷</h3>
+    <p class="muted">Game code lives in <code>src/game/star-collector.ts</code> — a small class with <code>start()</code>, <code>stop()</code>, and callbacks for score/lives/time. 🔊 Music + SFX come from the shared <code>src/game/sound.ts</code> WebAudio engine. Next steps: power-ups, and levels. Edit a file, refresh, play!</p>
+  </section>
+
+  <script>
+    import { StarCollector } from '../game/star-collector.ts';
+    import { sound } from '../game/sound.ts';
+
+    const wrap = document.getElementById('game-canvas-wrap')!;
+    const overlay = document.getElementById('game-overlay')!;
+    const title = document.getElementById('overlay-title')!;
+    const sub = document.getElementById('overlay-sub')!;
+    const scoreEl = document.getElementById('hud-score')!;
+    const levelEl = document.getElementById('hud-level')!;
+    const boostPill = document.getElementById('hud-boost')!;
+    const boostTime = document.getElementById('hud-boost-time')!;
+    const bestEl = document.getElementById('hud-best')!;
+    const startBtn = document.getElementById('btn-start')!;
+    const restartBtn = document.getElementById('btn-restart')! as HTMLButtonElement;
+    const muteBtn = document.getElementById('btn-mute')!;
+    const paintMute = () => { muteBtn.textContent = sound.muted ? '🔇' : '🔊'; };
+    paintMute();
+    muteBtn.addEventListener('click', () => { sound.ensure(); sound.click(); sound.toggle(); paintMute(); });
+
+    const game = new StarCollector(wrap, {
+      onScore: (s, best) => { scoreEl.textContent = String(s); bestEl.textContent = String(best); },
+      onLevel: (l) => { levelEl.textContent = String(l); },
+      onBoost: (s) => { boostPill.hidden = s <= 0; boostTime.textContent = String(Math.ceil(s)); },
+      onEnd: ({ score, best, won }) => {
+        title.textContent = won ? 'New best! 🏆' : 'Game over!';
+        sub.textContent = `Score ${score} · Best ${best}. Hit Restart to play again.`;
+        overlay.hidden = false;
+      },
+    });
+    bestEl.textContent = String(game.best);
+
+    // Touch buttons
+    document.querySelectorAll('[data-move]').forEach((b) => {
+      const dir = (b as HTMLElement).dataset.move!;
+      const on = (e: Event) => { e.preventDefault(); game.setTouch(dir as any, true); };
+      const off = (e: Event) => { e.preventDefault(); game.setTouch(dir as any, false); };
+      b.addEventListener('pointerdown', on);
+      b.addEventListener('pointerup', off);
+      b.addEventListener('pointerleave', off);
+    });
+
+    startBtn.addEventListener('click', () => { overlay.hidden = true; game.start(); });
+    restartBtn.addEventListener('click', () => { overlay.hidden = true; game.start(); });
+  </script>
+</BaseLayout>

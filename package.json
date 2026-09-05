@@ -1,0 +1,24 @@
+{
+  "name": "lenny-simpson-blog",
+  "type": "module",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "sync": "astro sync"
+  },
+  "dependencies": {
+    "astro": "^4.15.0",
+    "@astrojs/rss": "^4.0.0",
+    "@astrojs/mdx": "^2.0.0",
+    "three": "^0.170.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/three": "^0.170.0",
+    "typescript": "^5.4.0"
+  }
+}

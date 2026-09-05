@@ -1,0 +1,42 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="LennySimpson — Hobby Page & Three.js Game">
+  <section class="hero">
+    <h1>Hey, I'm Lenny! 👋<br />I build <span style="color:var(--accent)">games</span>.</h1>
+    <p>This is my hobby corner of the internet. I’m making 3D games with my dad using Three.js — and writing about what I learn.</p>
+    <div class="btn-row">
+      <a class="btn" href="/cross-the-swamp">🐸 Play Cross The Swamp</a>
+      <a class="btn secondary" href="/game">⭐ Star Collector</a>
+      <a class="btn secondary" href="/blog">Read the build log</a>
+    </div>
+  </section>
+
+  <section class="grid">
+    <div class="card">
+      <h3>🐸 Cross The Swamp <em style="font-size:.75rem;color:var(--accent)">NEW!</em></h3>
+      <p class="muted">Pick a chicken, duck or swan. Dodge snakes &amp; crabs, ride logs, avoid crocs!</p>
+      <p><a href="/cross-the-swamp">Play now →</a></p>
+    </div>
+    <div class="card">
+      <h3>⭐ Star Collector</h3>
+      <p class="muted">Endless drift survival: steer the ever-gliding rocket, grab stars, dodge asteroids. One hit ends it!</p>
+      <p><a href="/game">Play now →</a></p>
+    </div>
+    <div class="card">
+      <h3>🛠️ How it's made</h3>
+      <p class="muted">Astro for the site, Three.js for 3D, Cloudflare Pages for hosting. All static, super fast.</p>
+      <p><a href="/about">How we built it →</a></p>
+    </div>
+    <div class="card">
+      <h3>📝 Build log</h3>
+      <p class="muted">Short posts as we add features: movement, collisions, sounds, levels.</p>
+      <p><a href="/blog">See posts →</a></p>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>🚀 For next time</h3>
+    <p class="muted">Ideas Lenny wants to try: power-ups, boss asteroid, 2-player mode, mobile joystick. Want to help decide? Play the game and tell us what’s fun!</p>
+  </section>
+</BaseLayout>

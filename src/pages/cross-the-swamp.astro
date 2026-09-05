@@ -1,0 +1,138 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { ANIMALS } from '../game/swamp.ts';
+---
+<BaseLayout title="Cross The Swamp — Play | LennySimpson" description="Pick a chicken, duck or swan. Dodge snakes and crabs, ride logs, avoid crocodiles!">
+  <style>
+    .animals { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: .75rem; margin: 1rem 0; }
+    .animal {
+      background: var(--card); border: 2px solid rgba(255,255,255,.12);
+      border-radius: var(--radius); padding: .9rem; cursor: pointer;
+      color: var(--text); text-align: center; font-family: inherit;
+    }
+    .animal .face { font-size: 2.2rem; }
+    .animal small { color: var(--muted); display: block; }
+    .animal[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
+    .legend { font-size: .95rem; }
+    /* see-through start card so the board + spawn marker stay visible */
+    #game-canvas-wrap .overlay { background: transparent; pointer-events: none; align-content: start; padding-top: 2rem; }
+    #game-canvas-wrap .overlay > div {
+      background: rgba(5, 8, 22, 0.88); border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 16px; padding: 1.1rem 1.4rem; pointer-events: auto; max-width: 22rem;
+    }
+    #toast {
+      position: absolute; top: .8rem; left: 50%; transform: translateX(-50%); z-index: 5;
+      background: rgba(5, 8, 22, 0.92); border: 1px solid var(--accent); color: var(--text);
+      border-radius: 999px; padding: .45rem 1rem; font-weight: 700; white-space: nowrap;
+    }
+    #toast[hidden] { display: none; }
+  </style>
+
+  <h1>🐸 Cross The Swamp</h1>
+  <p class="muted">Pick your animal, then hop across! <strong>Land:</strong> dodge 🐍 snakes &amp; 🦀 crabs. <strong>Water:</strong> ride 🪵 logs, avoid 🐊 crocodiles. Fill all <strong>3 lily-pad nests</strong> to win — land exactly on a free pad, claimed nests stay taken!</p>
+
+  <h3>1 · Choose your animal</h3>
+  <div class="animals" role="group" aria-label="Choose animal">
+    {ANIMALS.map((a, i) => (
+      <button class="animal" data-animal={a.id} aria-pressed={i === 0 ? 'true' : 'false'} type="button">
+        <div class="face">{a.emoji}</div>
+        <strong>{a.name}</strong>
+        <small>{a.blurb}</small>
+      </button>
+    ))}
+  </div>
+
+  <h3>2 · Cross!</h3>
+  <div class="game-shell">
+    <div class="hud">
+      <span class="pill">Score: <span id="hud-score">0</span></span>
+      <span class="pill">Lives: <span id="hud-lives">3</span></span>
+      <span class="pill">Time: <span id="hud-time">90</span>s</span>
+      <span class="pill">Crossings: <span id="hud-cross">0</span>/3</span>
+      <span class="pill">Best: <span id="hud-best">0</span></span>
+      <button class="btn" id="btn-restart" type="button">↻ Restart</button>
+      <button class="btn secondary" id="btn-mute" type="button" title="Toggle sound">🔊</button>
+    </div>
+
+    <div id="game-canvas-wrap">
+      <div id="toast" hidden></div>
+      <div class="overlay" id="game-overlay">
+        <div>
+          <h2 id="overlay-title" style="margin:0 0 .5rem">Ready?</h2>
+          <p class="muted" id="overlay-sub" style="margin:0 0 1rem">Hop with arrow keys / WASD. One press = one hop.</p>
+          <button class="btn" id="btn-start" type="button">▶ Start</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="touch-controls" aria-hidden="true">
+      <button data-move="up" type="button">▲</button>
+      <button data-move="left" type="button">◀</button>
+      <button data-move="down" type="button">▼</button>
+      <button data-move="right" type="button">▶</button>
+    </div>
+  </div>
+
+  <section class="card legend">
+    <h3>How to play 🎮</h3>
+    <p class="muted">🟤 <strong>Start &amp; middle banks</strong> are safe. 🟢 <strong>Grass</strong> has snakes (slow, long) and crabs (fast, red) — don't share their square! 🔵 <strong>Water</strong> drowns you unless you're standing on a log — and logs carry you sideways. Dark green 🐊 crocs swim fixed patrol slots between the logs, so they never overlap them — but they'll get you even on a log. 🪹 Land exactly on a <strong>lily pad</strong> to claim that nest (egg + your flag appear); taken nests and bare bank bounce you back to start with no point. 🐔 gets bonus points, 🦆 gets more time, 🦢 gets an extra life.</p>
+    <p class="muted">Code: <code>src/game/swamp.ts</code> — lanes, logs, crocs, and hop logic. 🔊 Music + SFX are synthesized live with WebAudio (no audio files!) in <code>src/game/sound.ts</code> — try remixing the tune with Lenny!</p>
+  </section>
+
+  <script>
+    import { SwampGame } from '../game/swamp.ts';
+    import { sound } from '../game/sound.ts';
+
+    const wrap = document.getElementById('game-canvas-wrap')!;
+    const overlay = document.getElementById('game-overlay')!;
+    const title = document.getElementById('overlay-title')!;
+    const sub = document.getElementById('overlay-sub')!;
+    const scoreEl = document.getElementById('hud-score')!;
+    const livesEl = document.getElementById('hud-lives')!;
+    const timeEl = document.getElementById('hud-time')!;
+    const crossEl = document.getElementById('hud-cross')!;
+    const bestEl = document.getElementById('hud-best')!;
+    const toast = document.getElementById('toast')!;
+    const muteBtn = document.getElementById('btn-mute')!;
+    const paintMute = () => { muteBtn.textContent = sound.muted ? '🔇' : '🔊'; };
+    paintMute();
+    muteBtn.addEventListener('click', () => { sound.ensure(); sound.click(); sound.toggle(); paintMute(); });
+    let toastTimer = 0;
+    const animalBtns = [...document.querySelectorAll('[data-animal]')];
+
+    const game = new SwampGame(wrap, {
+      onScore: (s, best) => { scoreEl.textContent = String(s); bestEl.textContent = String(best); },
+      onLives: (l) => { livesEl.textContent = String(l); },
+      onTime: (t) => { timeEl.textContent = String(Math.ceil(t)); },
+      onCrossings: (n) => { crossEl.textContent = String(n); },
+      onToast: (msg) => {
+        toast.textContent = msg;
+        toast.hidden = false;
+        window.clearTimeout(toastTimer);
+        toastTimer = window.setTimeout(() => { toast.hidden = true; }, 1800);
+      },
+      onEnd: ({ score, best, won, reason }) => {
+        title.textContent = won ? 'Swamp crossed! 🏆' : 'Game over!';
+        sub.textContent = `${reason} Score ${score} · Best ${best}.`;
+        overlay.hidden = false;
+      },
+    });
+    bestEl.textContent = String(game.best);
+
+    function pick(id, btn) {
+      game.setAnimal(id);
+      animalBtns.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      livesEl.textContent = String(game.animal.lives);
+      timeEl.textContent = String(game.animal.time);
+    }
+    animalBtns.forEach((b) => b.addEventListener('click', () => pick(b.dataset.animal, b)));
+
+    document.querySelectorAll('[data-move]').forEach((b) => {
+      const dir = b.dataset.move;
+      b.addEventListener('click', (e) => { e.preventDefault(); game.hop(dir); });
+    });
+
+    document.getElementById('btn-start')!.addEventListener('click', () => { overlay.hidden = true; game.start(); });
+    document.getElementById('btn-restart')!.addEventListener('click', () => { overlay.hidden = true; game.start(); });
+  </script>
+</BaseLayout>

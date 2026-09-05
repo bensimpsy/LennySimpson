@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="About — LennySimpson" description="About Lenny's hobby page and how the game is built.">
+  <h1>About 👋</h1>
+  <p>Hi! I'm <strong>Lenny</strong>. This is my hobby page where I post the games and stuff I build with my dad.</p>
+  <div class="grid">
+    <div class="card">
+      <h3>What lives here?</h3>
+      <p class="muted">A playable Three.js game, a build log, and experiments. Everything is kid-built, dad-assisted.</p>
+    </div>
+    <div class="card">
+      <h3>Tech</h3>
+      <p class="muted">Site: <code>Astro</code> (static). 3D: <code>three</code> from npm. Hosting: <code>Cloudflare Pages</code> (<code>dist/</code> output). No server needed.</p>
+    </div>
+  </div>
+  <h2>How to run it</h2>
+  <pre><code>npm install
+npm run dev    # http://localhost:4321
+npm run build  # outputs to dist/
+npx wrangler pages deploy ./dist --project-name=lenny-simpson</code></pre>
+  <p><a class="btn" href="/game">Play the game</a></p>
+</BaseLayout>
