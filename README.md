@@ -41,7 +41,7 @@ description: "Short description for listings and SEO."
 3. Option B — CLI: `npm run build` then `npx wrangler pages deploy ./dist --project-name=lenny-simpson`
 4. Set `site` in `astro.config.mjs` to the real `*.pages.dev` URL (or custom domain) for correct RSS links.
 
-Config: `wrangler.jsonc` declares `pages_build_output_dir: dist`. Headers: `public/_headers`.
+Config: `wrangler.jsonc` serves `dist/` as static assets (`npx wrangler deploy` after `npm run build`). Headers: `public/_headers`.
 
 ## TODO
 - Add pagination if post count grows
