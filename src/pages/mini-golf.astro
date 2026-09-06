@@ -1,0 +1,85 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { HOLES } from '../game/mini-golf-physics';
+---
+<BaseLayout title="Mini Golf — Three Holes, One Shot | LennySimpson" description="Three sunny mini-golf holes. Aim, hold Space for power, and release to putt. Every hole is a hole-in-one challenge.">
+  <header class="golf-heading"><div><p>Three holes. One shot at a time.</p><h1>Sunday Mini Golf <span aria-hidden="true">⛳</span></h1></div><span class="golf-tag">A little patience. A good putt.</span></header>
+  <section class="golf-shell" aria-label="Mini golf game">
+    <div class="golf-hud">
+      <div><span>Hole</span><strong id="golf-hole">1 / 3</strong></div>
+      <div><span>This hole</span><strong><b id="golf-attempts">0</b> attempts</strong></div>
+      <div class="golf-total"><span>Total attempts</span><strong id="golf-total">0</strong></div>
+      <button type="button" id="golf-mute" aria-pressed="false" aria-label="Mute or unmute music and sound effects">Sound on</button>
+      <button type="button" id="golf-pause" disabled>Pause</button>
+      <button type="button" id="golf-restart">New round</button>
+    </div>
+    <div class="golf-stage">
+      <canvas id="golf-canvas" tabindex="0" aria-label="3D mini golf. Left and right arrows aim. Hold Space to charge power, release to swing. P pauses.">Mini golf requires a browser with WebGL support.</canvas>
+      <div class="golf-overlay" id="golf-overlay"><div>
+        <p class="golf-welcome">Welcome to the green</p>
+        <h2 id="golf-overlay-title">Make every shot count.</h2>
+        <p id="golf-overlay-message">Aim with ← →. Hold Space to build power, then release to putt. Missed shots return to the tee. Sink all three holes in as few attempts as you can.</p>
+        <ol id="golf-results" hidden aria-label="Round scorecard">{HOLES.map(hole => <li>{hole.name} <strong data-golf-result>0</strong></li>)}</ol>
+        <button class="golf-primary" id="golf-start" type="button">Let’s play →</button>
+      </div></div>
+    </div>
+    <div class="golf-shot-panel">
+      <div class="golf-hole-copy"><h2 id="golf-name">The first putt</h2><p id="golf-hint">A straight shot. Find the touch, not the top of the meter.</p></div>
+      <div class="golf-power-wrap"><div class="golf-power-label"><label id="golf-power-label">Swing power</label><span id="golf-power-number">0%</span></div><div id="golf-power" role="progressbar" aria-labelledby="golf-power-label" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="golf-power-fill"></div></div><small>Power rises and falls. Release to hit.</small></div>
+    </div>
+    <div class="golf-controls" aria-label="Touch and keyboard controls"><button type="button" data-golf-control="left" aria-label="Aim left">← Aim</button><button type="button" data-golf-control="right" aria-label="Aim right">Aim →</button><button type="button" data-golf-control="swing" class="golf-primary"><span id="golf-swing-label">Hold to swing</span></button></div>
+    <p id="golf-status" role="status" aria-live="polite">Aim with ← →. Hold Space, then release to putt.</p>
+  </section>
+  <div class="golf-instructions"><p><strong>← →</strong> Aim &nbsp; <strong>Hold Space</strong> Charge &nbsp; <strong>Release</strong> Swing &nbsp; <strong>P</strong> Pause</p><p>Every hole is a hole-in-one challenge. A miss resets the current hole, but every shot counts. The cup needs a soft finish: too much speed can send the ball over the rim. Touch players can hold the buttons below the course.</p></div>
+  <script>
+    import { mountMiniGolf } from '../game/mini-golf';
+    mountMiniGolf();
+  </script>
+  <style>
+    .golf-heading { margin:2rem 0 1.25rem; display:flex; gap:1rem; align-items:end; justify-content:space-between; }
+    .golf-heading p { margin:0 0 .35rem; color:#b7d9c6; }
+    .golf-heading h1 { margin:0; font-size:clamp(1.8rem,4vw,2.7rem); line-height:1.15; text-wrap:balance; }
+    .golf-tag { color:var(--muted); font-size:.9rem; }
+    .golf-shell { background:#173d33; border-radius:14px; overflow:hidden; }
+    .golf-hud { display:flex; flex-wrap:wrap; align-items:center; gap:.65rem 1.3rem; padding:.85rem 1rem; color:#f0f7ed; }
+    .golf-hud>div { display:flex; flex-direction:column; }
+    .golf-hud span { color:#c3d8cd; font-size:.75rem; }
+    .golf-hud strong { font-size:1rem; font-weight:700; font-variant-numeric:tabular-nums; }
+    .golf-hud b { font-weight:inherit; }
+    .golf-total { margin-right:auto; }
+    button { font:inherit; border:0; cursor:pointer; border-radius:8px; font-weight:700; }
+    .golf-hud button { padding:.5rem .65rem; font-size:.8rem; background:#2a5446; color:#edf6eb; }
+    button:hover:not(:disabled) { filter:brightness(1.1); }
+    button:disabled { cursor:default; opacity:.5; }
+    button:focus-visible,canvas:focus-visible { outline:3px solid #f6cc65; outline-offset:-3px; }
+    .golf-stage { position:relative; }
+    canvas { display:block; width:100%; height:560px; touch-action:none; }
+    .golf-overlay { position:absolute; inset:0; display:grid; place-items:center; padding:1.2rem; background:#16382ec7; }
+    .golf-overlay[hidden],#golf-results[hidden] { display:none; }
+    .golf-overlay>div { max-width:28rem; text-align:center; color:#f7f9ee; }
+    .golf-overlay h2 { font-size:clamp(1.6rem,4vw,2.5rem); line-height:1.1; text-wrap:balance; margin:.4rem 0 1rem; }
+    .golf-overlay p { line-height:1.6; }
+    .golf-welcome { color:#f6cf79; margin:0; }
+    .golf-primary { background:#f1cb70; color:#243c2d; padding:.8rem 1.4rem; }
+    #golf-results { list-style:none; text-align:left; padding:0; margin:1rem 0; }
+    #golf-results li { display:flex; gap:1rem; justify-content:space-between; padding:.25rem 0; border-bottom:1px solid #ffffff26; }
+    .golf-shot-panel { display:flex; gap:1.5rem; justify-content:space-between; padding:1rem 1.2rem .5rem; }
+    .golf-hole-copy { flex:1; }
+    .golf-hole-copy h2 { font-size:1.1rem; margin:0 0 .2rem; }
+    .golf-hole-copy p { font-size:.85rem; color:#d1e2d7; margin:0; max-width:40ch; }
+    .golf-power-wrap { width:38%; min-width:180px; }
+    .golf-power-label { display:flex; justify-content:space-between; font-size:.85rem; }
+    #golf-power { height:13px; background:#0d2a22; overflow:hidden; border-radius:4px; margin:.4rem 0; }
+    #golf-power-fill { width:100%; height:100%; background:#f1cb70; transform:scaleX(0); transform-origin:left; }
+    .golf-power-wrap small { font-size:.75rem; color:#d1e2d7; }
+    .golf-controls { display:flex; gap:.6rem; padding:.7rem 1.2rem .2rem; }
+    .golf-controls button { flex:1; padding:.75rem .5rem; background:#2a5446; color:#edf6eb; touch-action:none; user-select:none; }
+    .golf-controls .golf-primary { flex:2; background:#f1cb70; color:#243c2d; }
+    #golf-status { margin:0; padding:.7rem 1.2rem 1rem; font-size:.8rem; color:#f6e1a7; min-height:3rem; }
+    .golf-instructions { font-size:.85rem; margin:1rem 0 2rem; color:var(--muted); }
+    .golf-instructions strong { color:var(--text); }
+    .golf-instructions p { max-width:75ch; }
+    @media(max-width:600px) { .golf-tag { display:none; } canvas { height:430px; } .golf-hud { gap:.5rem 1rem; } .golf-hud>div { min-width:22%; } .golf-hud button { flex:1; } .golf-shot-panel { flex-direction:column; gap:.7rem; } .golf-power-wrap { width:100%; } .golf-heading { margin-top:1.4rem; } .golf-overlay h2 { font-size:1.7rem; } .golf-overlay p { font-size:.9rem; } }
+    @media(prefers-reduced-motion:reduce) { button { transition:none; } }
+  </style>
+</BaseLayout>
