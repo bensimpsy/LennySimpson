@@ -16,6 +16,8 @@ npm run dev
 Then visit http://localhost:4321. Play at http://localhost:4321/game.
 
 ## Scripts
+- `npm run test:swoopie-boys` — gameplay checks for the complete route, obstacle collisions, diagonal speed, swoop warnings and damage, dodging, dash cooldown, pause and end states (Node 22.18+).
+- Swoopie Boys: `/swoopie-boys` — a top-down, four-colour Game Boy style neighbourhood bike adventure. Visit five flagged landmarks, then reach the park while dodging magpies. Arrow keys / WASD to cycle, Space to dash, P / Escape to pause; touch controls are included. Locked dive-path warnings, three helmet hearts, a pocket map, and a locally saved fastest finish make each ride replayable.
 - Mini Golf: `/mini-golf` — a traditional 3D three-hole, hole-in-one challenge. Aim with Left/Right, hold Space to cycle power, and release to putt. Misses reset the current hole while attempts keep counting; touch controls, precise rolling physics, cup lip-outs, golfer animation, sound effects, and gentle music are included.
 - Courses progress from a straight putt to a diagonal bank rail and flower bed, then a hill with staggered planters and an arched garden gate. Soft putts drop across the visible cup opening; faster edge shots can lip out, and the flag is decorative.
 - `node tests/mini-golf.test.mjs` — physics checks for soft cup approaches from every side, fair rim misses, fast overshoots/lip-outs, angled rails and round bumpers, three hole-in-one routes with aim/power tolerance, full-round scoring, retries, pause, and cancelled charges.

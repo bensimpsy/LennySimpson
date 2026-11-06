@@ -8,6 +8,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "test:mini-golf": "node tests/mini-golf.test.mjs",
+    "test:swoopie-boys": "node tests/swoopie-boys.test.mjs",
     "check": "astro check",
     "sync": "astro sync"
   },

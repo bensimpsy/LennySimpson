@@ -1,0 +1,60 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Swoopie Boys — A Game Boy style bike adventure | LennySimpson" description="Hop on your bike, explore the neighbourhood and dodge swooping magpies in a top-down pixel adventure.">
+  <header class="swoopie-heading"><div><p>A neighbourhood bike adventure</p><h1>Swoopie Boys</h1></div><span>Spring has sprung.<br />The magpies have opinions.</span></header>
+  <section class="swoopie-shell" aria-label="Swoopie Boys game">
+    <div class="swoopie-hud"><span>Helmet <b id="swoopie-lives">♥ ♥ ♥</b></span><span>Stops <b id="swoopie-stops">0 / 5</b></span><span>Time <b id="swoopie-time">0:00</b></span><button id="swoopie-pause" disabled type="button">Pause</button><button id="swoopie-restart" type="button">Restart</button></div>
+    <div class="swoopie-stage">
+      <canvas id="swoopie-canvas" width="384" height="256" tabindex="0" aria-label="Top-down neighbourhood bike game. Arrow keys or WASD to cycle, Space to dash, P to pause.">Your browser needs Canvas support to play Swoopie Boys.</canvas>
+      <div class="swoopie-overlay" id="swoopie-overlay"><div><p class="cartridge">SWOOP SEASON · VOL. 01</p><h2 id="swoopie-title">To the park.<br />Helmet intact.</h2><p id="swoopie-message">Follow the flags to five neighbourhood stops. When a magpie marks its dive path, change direction or dash out of trouble.</p><button id="swoopie-start" type="button">Let’s ride →</button><p class="best" id="swoopie-best">Three helmet hearts. One brave little cyclist.</p></div></div>
+    </div>
+    <div class="swoopie-route"><span id="swoopie-target">Next: Corner shop</span><span id="swoopie-dash">Dash ready</span></div>
+    <p class="swoopie-status" id="swoopie-status" role="status" aria-live="polite">Follow the flag. Keep an eye on the sky.</p>
+    <div class="swoopie-controls" aria-label="Touch controls"><div class="dpad"><button data-swoopie="up" aria-label="Cycle up">↑</button><button data-swoopie="left" aria-label="Cycle left">←</button><button data-swoopie="down" aria-label="Cycle down">↓</button><button data-swoopie="right" aria-label="Cycle right">→</button></div><button data-swoopie="dash" class="dash-button">Dash <span>SPACE</span></button></div>
+  </section>
+  <div class="swoopie-help"><p><strong>Arrow keys / WASD</strong> cycle · <strong>Space</strong> dash · <strong>P / Escape</strong> pause</p><p class="muted">Visit the flashing flags in order, then roll into the park. Magpies commit to their dive path after a warning: change direction to dodge them. Dash gives a brief burst of speed and protection, then needs a moment to recharge. Three hits end the ride. Your fastest finish stays on this device.</p></div>
+  <script>
+    import { mountSwoopieBoys } from '../game/swoopie-boys';
+    mountSwoopieBoys();
+  </script>
+  <style>
+    .swoopie-heading { display:flex; justify-content:space-between; align-items:center; gap:1rem; margin:2rem 0 1rem; }
+    .swoopie-heading p { margin:0 0 .25rem; color:#c6df9c; }
+    .swoopie-heading h1 { font:900 clamp(2rem,6vw,3.2rem)/1.1 ui-monospace,monospace; letter-spacing:-.03em; margin:0; text-wrap:balance; }
+    .swoopie-heading>span { color:var(--muted); text-align:right; }
+    .swoopie-shell { background:#182d26; border:3px solid #698653; border-radius:12px; overflow:hidden; font-family:ui-monospace,monospace; }
+    .swoopie-hud { display:flex; flex-wrap:wrap; align-items:center; gap:1rem; padding:.8rem 1rem; color:#d5e9ac; font-size:.9rem; }
+    .swoopie-hud span:nth-child(3) { margin-right:auto; }
+    .swoopie-shell button { font:700 .9rem ui-monospace,monospace; color:#e5f3c7; background:#35543c; border:2px solid #698653; border-radius:4px; padding:.5rem .7rem; cursor:pointer; }
+    .swoopie-shell button:hover { background:#496d46; }
+    .swoopie-shell button:active { transform:translateY(1px); }
+    .swoopie-shell button:disabled { opacity:.45; cursor:default; }
+    .swoopie-shell button:focus-visible,canvas:focus-visible { outline:3px solid #f0ffcd; outline-offset:-3px; }
+    .swoopie-stage { position:relative; background:#aac77c; }
+    canvas { display:block; width:100%; aspect-ratio:3 / 2; image-rendering:pixelated; touch-action:none; }
+    .swoopie-overlay { position:absolute; inset:0; display:grid; place-items:center; background:#182d26c9; padding:1rem; text-align:center; }
+    .swoopie-overlay[hidden] { display:none; }
+    .swoopie-overlay>div { max-width:31rem; color:#e5f3c7; }
+    .swoopie-overlay h2 { font-size:clamp(1.25rem,4vw,2.3rem); line-height:1.2; margin:.6rem 0; text-wrap:balance; }
+    .swoopie-overlay p { line-height:1.5; }
+    .cartridge { font-size:.75rem; letter-spacing:.08em; }
+    .swoopie-overlay button { background:#c6df9c; border-color:#c6df9c; color:#182d26; padding:.8rem 1.25rem; }
+    .swoopie-overlay button:hover { background:#e5f3c7; }
+    .best { font-size:.8rem; }
+    .swoopie-route { display:flex; justify-content:space-between; gap:.5rem; flex-wrap:wrap; padding:.7rem 1rem; color:#e5f3c7; font-size:.85rem; }
+    .swoopie-status { color:#c6df9c; min-height:1.5em; margin:0; padding:0 1rem .6rem; font-size:.8rem; }
+    .swoopie-controls { display:flex; justify-content:space-between; align-items:center; gap:1rem; padding:.7rem 1rem; border-top:1px solid #698653; }
+    .dpad { display:grid; grid-template-columns:repeat(3,48px); grid-template-rows:repeat(2,42px); gap:4px; }
+    .dpad button { touch-action:none; user-select:none; font-size:1.25rem; }
+    .dpad button:nth-child(1) { grid-column:2; }
+    .dpad button:nth-child(2) { grid-row:2;grid-column:1; }
+    .dpad button:nth-child(3) { grid-row:2;grid-column:2; }
+    .dpad button:nth-child(4) { grid-row:2;grid-column:3; }
+    .swoopie-controls .dash-button { min-height:60px; min-width:90px; touch-action:none; user-select:none; background:#c6df9c;color:#182d26; }
+    .dash-button span { display:block;font-size:.65rem; margin-top:.25rem; }
+    .swoopie-help { font-size:.9rem;max-width:75ch;margin-top:1rem; }
+    @media(max-width:550px) { .swoopie-heading>span { display:none; } .swoopie-hud { gap:.5rem;padding:.6rem;font-size:.75rem; } .swoopie-hud button { font-size:.75rem;padding:.35rem; } .swoopie-overlay p { font-size:.75rem;margin:.4rem 0; } .swoopie-overlay .cartridge,.swoopie-overlay .best { display:none; } .swoopie-overlay button { padding:.55rem .8rem; } .swoopie-route { font-size:.75rem;padding:.6rem; } }
+    @media(prefers-reduced-motion:reduce) { .swoopie-shell button:active { transform:none; } }
+  </style>
+</BaseLayout>
